@@ -1,0 +1,89 @@
+<% layout("../views/layout/boilerplate.ejs") -%>
+
+       <div class="row offset-3 mt-3">
+              <div class="col-8">
+
+
+                     <h2>
+                            <%= chat.title %>
+                     </h2>
+              </div>
+
+              <div class="card col-6 ">
+                     <img src="<%= chat.image.url%>" class="card-img-top show-img" alt="Listing">
+                     <div class="card-body mt-3">
+                            <p class="card-text">
+                                   owner : <%= chat.owner.username %> <br>
+                                   Description: <%= chat.description %> <br>
+                                          Price: <%= chat.price %> <br>
+                                                 Location: <%= chat.location %> <br>
+                                                        Country: <%= chat.country %>
+                            </p>
+                     </div>
+              </div>
+              <% if(currentuser && chat.owner._id.equals(currentuser._id)){ %>
+              <div class="btns">
+                     <form action="/listing/<%= chat._id%>/delete" method="get">
+                            <button class="btn btn-dark delete">Delete</button>
+                     </form>
+                     <form action="/listing/<%=chat._id%>" method="get">
+                            <button class="btn btn-dark edit">Edit</button>
+                     </form>
+              </div>
+              <% } %>
+              <div>
+                     <% if(currentuser){ %>
+                     <form action="/listing/<%= chat._id %>/review" method="post" class="needs-validation" novalidate>
+                            <h2>Leave Review</h2>
+                            <div class="mt-3">
+                                   <label for="rating" class="form-label">Rating</label>
+                                   <fieldset class="starability-slot">
+                                          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                                          <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                          <label for="first-rate1" title="Terrible">1 star</label>
+                                          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                          <label for="first-rate2" title="Not good">2 stars</label>
+                                          <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                          <label for="first-rate3" title="Average">3 stars</label>
+                                          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                          <label for="first-rate4" title="Very good">4 stars</label>
+                                          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                          <label for="first-rate5" title="Amazing">5 stars</label>
+                                        </fieldset>
+                            </div>
+                            <div class="mt-3 mb-3">
+                                   <label for="Comment" class="form-label">Comment</label>
+                                   <textarea name="review[comment]" id="Comment" rows="4" cols="30" class="form-control"
+                                          required></textarea>
+                                   <div class="invalid-feedback">Please add your comment</div>
+                            </div>
+                            <div class="mb-3">
+                                   <button class="btn btn-outline-dark">Submit</button>
+                            </div>
+                     </form>
+                     <% } %>
+                     <hr>
+                     <p><b>All Reviews</b></p>
+                     <div class="row">
+                            <% for(review of chat.reviews){ %>
+                                   <div class="card card2 col-5 mb-2 mt-3 ms-3">
+                                          <div class="card-body">
+                                                 <h5 class="card-title">@<%=review.author.username%></h5>
+                                                 <h6 class="card-subtitle mb-2 text-body-secondary">
+                                                        <p class="starability-result" data-rating=<%= review.rating %>></p>
+                                                 </h6>
+                                                 <h6 class="card-subtitle mb-2 text-body-secondary">
+                                                        <%= review.comment %>
+                                                 </h6>
+                                                 <form action="/listing/<%=chat._id%>/review/<%=review._id%>?_method=DELETE" class="mb-3" method="post">
+                                                        <button class="btn btn-dark">Delete</button>
+                                                      </form>
+
+                                          </div>
+
+                                   </div>
+                                   <% } %>
+                     </div>
+
+              </div>
+       </div>
